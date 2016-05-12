@@ -1,9 +1,18 @@
 # pylint: disable=unused-argument
-from charms.reactive import when_none, is_state
+from charms.reactive import when_any, when_none, is_state
 from charmhelpers.core.hookenv import status_set
 
 
 @when_none('namenode.spec.mismatch', 'resourcemanager.spec.mismatch')
+@when_any(
+    'bigtop.available',
+    'apache-bigtop-datanode.started',
+    'apache-bigtop-nodemanager.started',
+    'namenode.joined',
+    'namenode.ready',
+    'resourcemanager.joined',
+    'resourcemanager.ready',
+)
 def update_status():
     hdfs_rel = is_state('namenode.joined')
     yarn_rel = is_state('resourcemanager.joined')
